@@ -246,6 +246,7 @@ ggplot(many_garden_result, aes(site, simpson, fill=mostfreq))+geom_col()
 # advantage is you don't need to define the data structure
 # disadvantage lists are hard to deal with
 
+# run apply on garden sample over over columns (1 is row, 2 is columns)
 many_gardens_result_aslist = apply(garden_sample, 2, function(x) {diversity= compute_diversity(x); return(diversity)})
 
 head(many_gardens_result_aslist)
@@ -253,6 +254,7 @@ head(many_gardens_result_aslist)
 # look at an individual garden (element of list)
 many_gardens_result_aslist[3]
 # all named items
+# "[" for this list i want to extract the element called simpson 
 lapply(many_gardens_result_aslist,"[", c("simpson"))
 
 # often easier to get it out of list format
@@ -260,7 +262,17 @@ lapply(many_gardens_result_aslist,"[", c("simpson"))
 many_gardens_result_aslist[1]
 # note that each element of the list has 2 items- so store as a matrix with 2 columns one for each item - and use unlist to extract
 
-many_gardens_sum = as.data.frame(matrix(unlist(many_gardens_result_aslist), ncol=2, byrow=T))
+# why use unlist fucntion
+## results of apply are in a list which isnt super helpful 
+## unlist helps with turning something into a dataframe
+## just takes everything in the list and collapses it into a string
+## turn the unlist into a matrix makes it into columns
+## turns a list into something more management
+
+many_gardens_sum = 
+  # in each element of the list there were 2 things --> 2 columns
+  as.data.frame(matrix(unlist(many_gardens_result_aslist), 
+                                        ncol=2, byrow=T))
 colnames(many_gardens_sum)=c("simpson","mostfreq")
 # add site name
 many_gardens_sum$site = site
